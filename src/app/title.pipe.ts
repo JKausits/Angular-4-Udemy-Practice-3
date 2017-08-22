@@ -6,14 +6,27 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 export class TitlePipe implements PipeTransform {
     transform(value: string) {
+        return this.titleCase(value);
+    }
+
+    titleCase(value: string) {
+        value = value.toLowerCase();
         const valueArr = value.split(' ').map((word, index) => {
-            word = word.toLowerCase();
-            if (word === 'the' && index !== 0 || word === 'of' && index !== 0) {
+            if (index !== 0 && this.isPreposition(word)) {
                 return word;
             }
-            return word.charAt(0).toUpperCase() + word.slice(1);
+            return this.capitalizeWord(word);
         });
 
         return valueArr.join(' ');
+    }
+
+    isPreposition(word: string) {
+        const prepositions = ['the', 'of'];
+        return prepositions.includes(word);
+    }
+
+    capitalizeWord(word: string) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
     }
 }
